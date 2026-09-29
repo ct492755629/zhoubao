@@ -579,7 +579,9 @@ textarea{resize:vertical;min-height:90px;}
           <button class="btn-sm" id="btn-md" type="button">导出 Markdown</button>
           <button class="btn-sm" id="btn-txt" type="button">复制纯文本</button>
           <button class="btn-sm" id="btn-print" type="button">打印 / 另存 PDF</button>
+          <button class="btn-sm" id="btn-pro" type="button" style="background:#f4f3ee;color:#9a9488;border:1px dashed #cfc9bd;">更多岗位模板 · Pro</button>
         </div>
+        <p id="pro-note" style="display:none;margin:12px 2px 0;font-size:13px;line-height:1.6;color:var(--ink-2);">Pro 版正在开发：HR / 财务 / 法务 / 教师等更多岗位模板、精美排版 PDF、AI 润色、历史记录、去广告。<strong>团队/企业版</strong>（全员在线填写、一键汇总、风险看板）合作请见「关于我们」。需要可留言，上线优先通知。</p>
       </div>
     </div>
   </div>
@@ -640,6 +642,7 @@ textarea{resize:vertical;min-height:90px;}
         <a href="#/tool" data-nav>写周报</a>
         <a href="#/articles" data-nav>写作指南</a>
         <a href="#/about" data-nav>关于我们</a>
+        <a href="#/about" data-nav>团队版合作</a>
       </div>
     </div>
     <p class="footer-ad-note">周报助手 · 免费在线周报生成器 · 数据本地处理，不上传服务器</p>
@@ -1415,6 +1418,10 @@ document.getElementById("btn-txt").addEventListener("click",()=>{
 });
 document.getElementById("btn-print").addEventListener("click",()=>{
   window.print();
+});
+document.getElementById("btn-pro").addEventListener("click",()=>{
+  const n=document.getElementById("pro-note");
+  n.style.display=(n.style.display==="none")?"block":"none";
 });
 function fallbackCopy(text){
   const ta = document.createElement("textarea");
