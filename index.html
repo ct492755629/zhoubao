@@ -12,6 +12,18 @@
 <meta property="og:description" content="无需注册，数据不上传，3分钟生成一份领导满意的专业周报。">
 <meta property="og:type" content="website">
 <meta name="robots" content="index,follow">
+<link rel="canonical" href="https://www.zhoubaozhu.cloud/">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"周报助手","alternateName":"免费在线周报生成器","url":"https://www.zhoubaozhu.cloud/","description":"免费在线周报生成工具，无需注册、数据不上传，内置多岗位模板，3分钟生成专业周报。","inLanguage":"zh-CN","publisher":{"@type":"Organization","name":"周报助手","url":"https://www.zhoubaozhu.cloud/"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"周报助手真的免费吗？","acceptedAnswer":{"@type":"Answer","text":"是的，完全免费，没有次数限制，不需要注册账号。后续也不会突然收费，靠广告维持运营。"}},
+{"@type":"Question","name":"我的工作内容会被保存或上传吗？","acceptedAnswer":{"@type":"Answer","text":"不会。全部逻辑都在浏览器本地运行，输入内容不会发送到任何服务器，关掉页面即彻底消失。"}},
+{"@type":"Question","name":"生成的周报能直接发吗？","acceptedAnswer":{"@type":"Answer","text":"可以。点击复制为富文本后直接粘贴到邮件、钉钉、企业微信、飞书，格式会保留；也可导出 Markdown 或纯文本。"}},
+{"@type":"Question","name":"和 AI 写周报工具有什么区别？","acceptedAnswer":{"@type":"Answer","text":"AI 工具需把工作内容发到云端、免费额度有限；周报助手本地生成、无需等待、不限次数，结构更稳定可控。"}}
+]}
+</script>
 <style>
 /* ===== 设计变量 ===== */
 :root{
@@ -226,6 +238,8 @@ textarea{resize:vertical;min-height:90px;}
 .generate-bar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:22px;}
 .btn-generate{background:var(--accent);color:#fff;border:none;padding:13px 26px;border-radius:11px;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(200,68,47,.3);transition:all .15s;}
 .btn-generate:hover{background:var(--accent-dark);transform:translateY(-1px);}
+.btn-clear{background:#fff;color:var(--ink-2);border:1px solid var(--line-strong);padding:13px 22px;border-radius:11px;font-size:15px;font-weight:600;cursor:pointer;margin-left:12px;}
+.btn-clear:hover{color:var(--accent);border-color:var(--accent);}
 .privacy-note{font-size:12.5px;color:var(--ok);margin-top:12px;display:flex;align-items:center;gap:6px;}
 
 /* 输出区 */
@@ -342,6 +356,16 @@ textarea{resize:vertical;min-height:90px;}
   .tool-hero h1{font-size:27px;}
   .panel{padding:20px;}
   .report{padding:22px 18px;}
+}
+/* ===== 打印 / 另存 PDF：只输出周报正文 ===== */
+@media print{
+  body{background:#fff;}
+  body *{visibility:hidden;}
+  #report-box,#report-box *{visibility:visible;}
+  #report-box{position:absolute;left:0;top:0;width:100%;border:none;box-shadow:none;padding:0;}
+  #report-box .stamp,.output-actions,#toast{display:none !important;}
+  #report-box h2{font-size:16px;}
+  #report-box .data{color:#000;}
 }
 </style>
 </head>
@@ -531,6 +555,7 @@ textarea{resize:vertical;min-height:90px;}
 
       <div class="generate-bar">
         <button class="btn-generate" id="btn-generate" type="button">生成周报</button>
+        <button class="btn-clear" id="btn-clear" type="button">清空重填</button>
       </div>
       <p class="privacy-note">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -553,6 +578,7 @@ textarea{resize:vertical;min-height:90px;}
           <button class="btn-sm primary" id="btn-copy" type="button">复制为富文本</button>
           <button class="btn-sm" id="btn-md" type="button">导出 Markdown</button>
           <button class="btn-sm" id="btn-txt" type="button">复制纯文本</button>
+          <button class="btn-sm" id="btn-print" type="button">打印 / 另存 PDF</button>
         </div>
       </div>
     </div>
@@ -617,6 +643,9 @@ textarea{resize:vertical;min-height:90px;}
       </div>
     </div>
     <p class="footer-ad-note">周报助手 · 免费在线周报生成器 · 数据本地处理，不上传服务器</p>
+    <p class="footer-ad-note busuanzi_container_site_pv" style="display:none;">
+      本站总访问量 <span class="busuanzi_value_site_pv"></span> 次 · 访客数 <span class="busuanzi_value_site_uv"></span> 人
+    </p>
     <!-- 广告位预留：ICP备案后在此接入百度联盟广告 -->
   </div>
 </footer>
@@ -856,6 +885,194 @@ const ARTICLES = [
   <table><tr><th>维度</th><th>通用AI</th><th>AI专用工具</th><th>本地模板工具</th></tr><tr><td>生成速度</td><td>中</td><td>快</td><td>极快</td></tr><tr><td>结构稳定性</td><td>看提示词</td><td>稳定</td><td>稳定</td></tr><tr><td>隐私安全</td><td>低</td><td>中</td><td>高（本地）</td></tr><tr><td>成本</td><td>免费/低</td><td>部分付费</td><td>免费</td></tr></table>
   <p>最推荐的使用姿势是<strong>组合拳</strong>：用本地模板工具（如<a href="#/tool" data-nav>周报助手</a>）快速生成规范骨架，保证结构不出错、数据不出门；如果你想要更有个人风格的开头和表述，再在生成结果上自己改两句话。既快、又稳、又安全。</p>
 `
+},
+{
+  slug:"xiaoshou-zhoubao-zenme-xie",
+  title:"销售周报怎么写？围绕数字、漏斗和客户，领导一眼看懂",
+  cat:"分岗位",
+  date:"2026-09-22",
+  desc:"销售周报的核心是数字和客户进展。本文给你一套销售周报结构：核心业绩数据、重点客户推进、丢单与延期原因、下周计划与业绩预测，附可直接套用的模板。",
+  content:`
+  <h1>销售周报怎么写？围绕数字、漏斗和客户，领导一眼看懂</h1>
+  <p class="meta">分类：分岗位 · 更新于 2026-09-22</p>
+  <p>销售岗的周报，本质是一份"业绩进度报告"。领导最关心三件事：<strong>这个月的数能不能完成？卡在哪个客户？需要什么支持？</strong>所以销售周报不要写成"本周拜访了几个客户、打了多少电话"的流水账，而要围绕数字、漏斗和客户来组织。</p>
+  <h2>一、开头放核心业绩数据</h2>
+  <p>把最关键的数字放在最前面，让领导 10 秒钟掌握全局：本周/本月累计签约额、回款额、新增商机数、跟进客户数，以及完成率和环比变化。</p>
+  <ul><li><strong>签约：</strong>本周新签 X 单，金额 X 万元；本月累计 X 万元，完成月度目标的 X%</li><li><strong>回款：</strong>本周回款 X 万元，逾期应收 X 万元</li><li><strong>商机：</strong>新增有效商机 X 个，跟进中客户 X 个</li></ul>
+  <h2>二、重点客户逐个写推进状态</h2>
+  <p>挑 3-5 个金额大、阶段关键的客户，按"当前阶段 → 下一步动作 → 卡点"写。这是销售周报最有信息量的部分。</p>
+  <ul><li><strong>XX公司（方案阶段，预计金额X万）：</strong>已完成需求沟通，本周提交方案；下一步约决策人演示；卡点：对方采购流程较长，需提前介入</li><li><strong>XX集团（合同阶段）：</strong>合同条款已确认，预计下周签约回款</li></ul>
+  <h2>三、丢单和延期要写原因</h2>
+  <p>丢单不可怕，可怕的是不知道为什么丢。写清楚丢单/延期的真实原因（价格、竞品、预算、决策链），既是对自己的复盘，也能帮团队调整打法。</p>
+  <h2>销售周报模板</h2>
+  <blockquote><strong>一、核心数据（截至本周五）</strong><br>本月新签目标 X 万，已完成 X 万，完成率 X%；本周新签 X 万、回款 X 万；新增商机 X 个。<br><br><strong>二、重点客户推进</strong><br>1. XX客户：阶段/金额/下一步/卡点<br>2. XX客户：阶段/金额/下一步/卡点<br><br><strong>三、丢单与风险</strong><br>XX客户因XX原因延期/丢单；XX客户回款存在风险，已采取XX动作。<br><br><strong>四、下周计划与预测</strong><br>重点推进X个客户签约，预计下周新签X万；需主管协助XX客户高层拜访。</blockquote>
+  <p>销售周报坚持用数据说话，既能帮自己理清漏斗，也让领导知道该把资源投向哪里。把客户和数据填入<a href="#/tool" data-nav>周报助手</a>选择"销售"岗位，可快速生成规范初稿。</p>
+`
+},
+{
+  slug:"shichang-pinpai-zhoubao-zenme-xie",
+  title:"市场品牌周报怎么写？把“做了什么”翻译成“带来什么”",
+  cat:"分岗位",
+  date:"2026-09-23",
+  desc:"市场品牌工作最容易被说“看不出效果”。本文教你用“动作—曝光—线索—转化”的链路写周报，把投放、内容、活动的产出量化，附市场岗周报模板。",
+  content:`
+  <h1>市场品牌周报怎么写？把“做了什么”翻译成“带来什么”</h1>
+  <p class="meta">分类：分岗位 · 更新于 2026-09-23</p>
+  <p>市场、品牌、公关岗位写周报最大的痛点是：<strong>工作看起来很忙，效果却很难量化</strong>。写了推文、办了活动、投了广告，如果只描述动作，领导会问"然后呢？"。市场周报的关键，是把每一个动作都接到一条效果链路上：<strong>动作 → 曝光 → 互动/线索 → 转化</strong>。</p>
+  <h2>一、投放与曝光数据</h2>
+  <p>付费投放要报清"花了多少钱、带来多少量、单价是多少"：消耗、曝光、点击、点击率、千次曝光成本（CPM）、留资/线索量、单条线索成本（CPL）。并对比上周，说明涨跌原因。</p>
+  <h2>二、内容与活动产出及效果</h2>
+  <p>内容不要只写"发布了3篇推文"，要带上阅读、互动、涨粉、引流数据；活动要写参与人数、留资数、转化数和 ROI。哪怕数字不大，也要形成"动作—结果"的对应习惯。</p>
+  <h2>三、品牌与竞品动态</h2>
+  <p>品牌类长线工作（媒体报道、口碑、搜索指数）可以用趋势描述；同时用一小段记录竞品动作和行业变化，体现你的市场敏感度。</p>
+  <h2>市场品牌周报模板</h2>
+  <blockquote><strong>一、投放数据：</strong>本周消耗X元，曝光X万、点击X，点击率X%；获客X个，单线索成本X元，环比下降X%。<br><br><strong>二、内容/活动：</strong>发布内容X篇，总阅读X、互动X、涨粉X；XX活动参与X人，留资X个，转化X单，ROI约X。<br><br><strong>三、品牌与竞品：</strong>本周媒体报道X篇，品牌搜索指数环比X%；竞品上线XX动作，建议我们XX。<br><br><strong>四、下周计划：</strong>优化XX渠道投放；上线XX主题内容；筹备XX活动，需XX支持。</blockquote>
+  <p>当你坚持把每个市场动作都量化到效果，"市场是花钱部门"的印象就会改变。把素材整理进<a href="#/tool" data-nav>周报助手</a>"市场品牌"岗位，快速成稿。</p>
+`
+},
+{
+  slug:"xinsheng-zhoubao-zenme-xie",
+  title:"实习生/职场新人周报怎么写？让领导觉得你靠谱、成长快",
+  cat:"分岗位",
+  date:"2026-09-24",
+  desc:"新人周报是展示学习速度和靠谱程度的窗口。本文讲清新人周报写什么、怎么写：学习与产出、遇到的问题、需要的帮助，附实习生周报模板和避坑清单。",
+  content:`
+  <h1>实习生/职场新人周报怎么写？让领导觉得你靠谱、成长快</h1>
+  <p class="meta">分类：分岗位 · 更新于 2026-09-24</p>
+  <p>对实习生和刚入职的新人来说，周报不是负担，而是<strong>最低成本的"刷存在感"和"证明成长"的机会</strong>。领导通过周报判断两件事：这人学得快不快？交代的事靠不靠谱？掌握下面的结构，新人周报就能写得超出预期。</p>
+  <h2>一、写清"学了什么"和"产出了什么"</h2>
+  <p>新人的工作以学习和辅助为主，但不要只写"学习了公司业务、熟悉了产品"。要具体：学了哪个系统/哪份文档/哪个流程，并且最好跟一个产出——比如"看完XX后台操作文档，独立完成了X条数据录入/整理了X份资料"。</p>
+  <h2>二、主动写问题和收获</h2>
+  <p>把本周遇到的问题、怎么解决的、有什么收获写出来，能直接体现你的学习闭环。比如"第一次做XX时出错，原因是XX，已记录检查清单，第二次零差错"。这种"踩坑—修正"的记录，比单纯报喜更让领导放心。</p>
+  <h2>三、明确需要的帮助和下周计划</h2>
+  <p>新人最忌讳"闷头卡住"。周报里写清需要导师/同事提供什么帮助、下周计划学什么做什么，既推进工作，也显得你有规划。</p>
+  <h2>新人周报模板</h2>
+  <blockquote><strong>本周学习：</strong>熟悉了XX业务流程和XX工具的使用，阅读了XX文档。<br><strong>本周产出：</strong>1. 完成XX（数量/结果）；2. 协助XX完成XX。<br><strong>问题与收获：</strong>做XX时遇到XX问题，通过XX方式解决，收获是XX。<br><strong>下周计划：</strong>学习XX；独立承担XX。<br><strong>需要帮助：</strong>希望在XX方面得到XX指导。</blockquote>
+  <h2>新人周报三个不要</h2>
+  <ul><li>不要只写"学习了、了解了"，没有具体产出</li><li>不要写"本周工作很充实、学到很多"这类空话</li><li>不要把问题藏着，等领导来问</li></ul>
+  <p>新人阶段，周报写得越具体、越有闭环，领导越愿意把重要的事交给你。用<a href="#/tool" data-nav>周报助手</a>选"通用"岗位生成初稿，再补上你的学习收获即可。</p>
+`
+},
+{
+  slug:"zhoubao-kaitou-zenme-xie",
+  title:"周报开头第一句怎么写？5类万能开头句式直接用",
+  cat:"入门指南",
+  date:"2026-09-25",
+  desc:"周报开头定调，写好第一句能让领导愿意往下看。本文整理5类可直接套用的周报开头句式：数据总结型、进展顺利型、项目节点型、问题导向型、平稳推进型，并指出常见的开头废话。",
+  content:`
+  <h1>周报开头第一句怎么写？5类万能开头句式直接用</h1>
+  <p class="meta">分类：入门指南 · 更新于 2026-09-25</p>
+  <p>很多人写周报，卡在第一句。开头的作用是<strong>定调</strong>——用一句话告诉领导本周整体状态，让他愿意往下看。下面 5 类开头句式，照着改改就能用。</p>
+  <h2>一、数据总结型（最推荐）</h2>
+  <blockquote>"本周核心目标按计划推进，完成关键事项 X 项，XX 指标环比提升 X%，整体进展符合预期。"</blockquote>
+  <p>适合运营、销售等数据型岗位，一上来就给结果，最有说服力。</p>
+  <h2>二、项目节点型</h2>
+  <blockquote>"本周 XX 项目完成 XX 关键节点（如内测上线），比计划提前 X 天，目前进入 XX 阶段，暂无阻塞。"</blockquote>
+  <p>适合项目制工作，让领导一眼知道项目走到哪了。</p>
+  <h2>三、进展顺利型</h2>
+  <blockquote>"本周各项工作有序开展，重点任务均按期完成，团队协作顺畅，未出现重大风险。"</blockquote>
+  <p>适合确实平稳、没有特别突出亮点的一周，稳妥不出错。</p>
+  <h2>四、问题导向型（适合需要支持时）</h2>
+  <blockquote>"本周整体进展正常，但 XX 环节出现 XX 问题，对 XX 节点有一定影响，已采取 XX 措施，需协调 XX 资源支持。"</blockquote>
+  <p>当你需要资源或领导拍板时，用这类开头把问题前置，避免被淹没在结尾。</p>
+  <h2>五、目标对照型</h2>
+  <blockquote>"对照本周计划，X 项任务已完成、X 项持续推进，完成率 X%，偏差事项及原因如下。"</blockquote>
+  <p>适合管理规范、强调计划闭环的团队。</p>
+  <h2>开头避坑：这些"废话"别写</h2>
+  <ul><li>"时间飞逝，又到了一周写周报的时候"——抒情，无信息</li><li>"本周工作十分忙碌，收获满满"——自夸，无实据</li><li>"在领导的正确带领下……"——套话，显得不真诚</li></ul>
+  <p>记住一个原则：<strong>开头第一句尽量是"结论或数字"，而不是"感受和套话"</strong>。想让开头和正文一次成型，可以用<a href="#/tool" data-nav>周报助手</a>自动生成，再替换成你喜欢的句式。</p>
+`
+},
+{
+  slug:"yuebao-zenme-xie",
+  title:"月报怎么写？和周报有什么区别？附月报结构模板",
+  cat:"入门指南",
+  date:"2026-09-26",
+  desc:"月报不是4篇周报的简单相加。本文讲清月报与周报在颗粒度、视角、读者上的区别，给出“月度成果—复盘—下月规划”的月报结构和可套用模板。",
+  content:`
+  <h1>月报怎么写？和周报有什么区别？附月报结构模板</h1>
+  <p class="meta">分类：入门指南 · 更新于 2026-09-26</p>
+  <p>很多人写月报，就是把四篇周报拼在一起交差，结果领导看完只记得"你好像挺忙"。<strong>月报和周报是两种东西</strong>：周报记录"这周做了什么"，月报要回答"这个月做成了什么、学到了什么、下个月怎么打"。</p>
+  <h2>月报和周报的三个区别</h2>
+  <ul><li><strong>颗粒度不同：</strong>周报写具体动作，月报写整体成果和数据</li><li><strong>视角不同：</strong>周报是执行视角，月报是经营/复盘视角，要有归因和判断</li><li><strong>读者不同：</strong>月报常被更上级或跨部门看到，要求更精炼、更结果导向</li></ul>
+  <h2>月报三段式结构</h2>
+  <p><strong>第一段：月度成果（用数据说话）</strong>——对照月初目标，列出 3-5 项关键成果和核心指标完成情况，突出最有价值的 1-2 个亮点。</p>
+  <p><strong>第二段：复盘（做得好的、不足的、原因）</strong>——哪些目标达成/未达成，原因是什么，沉淀了什么经验或方法。这是月报区别于周报的核心。</p>
+  <p><strong>第三段：下月规划（目标 + 关键举措）</strong>——下月最重要的目标是什么、用哪几件关键举措支撑、需要什么资源。</p>
+  <h2>月报模板</h2>
+  <blockquote><strong>一、月度成果：</strong>本月核心目标完成X%，关键成果：1. XX（数据）；2. XX（数据）；3. XX。亮点：XX。<br><br><strong>二、复盘：</strong>做得好的：XX，原因是XX；不足：XX未达预期，原因是XX，改进动作XX。<br><br><strong>三、下月规划：</strong>目标：XX；关键举措：1. XX 2. XX 3. XX；需支持：XX资源/决策。</blockquote>
+  <p>写月报前先想"如果领导只看三句话，我希望他记住什么"，再动笔。日常周报可以用<a href="#/tool" data-nav>周报助手</a>快速完成，把省下的时间留给月度复盘。</p>
+`
+},
+{
+  slug:"zhoubao-xie-duoshao-heshi",
+  title:"周报写多少字合适？要写加班吗？一次说清",
+  cat:"入门指南",
+  date:"2026-09-27",
+  desc:"周报不是越长越好，也不是越短越省事。本文给出不同岗位的周报字数建议、判断长短的标准，以及“要不要写加班、怎么写才不踩雷”的具体方法。",
+  content:`
+  <h1>周报写多少字合适？要写加班吗？一次说清</h1>
+  <p class="meta">分类：入门指南 · 更新于 2026-09-27</p>
+  <p>"周报到底写多长？"是高频问题。有人三五行交差显得敷衍，有人写两三千字全是细节，领导根本看不完。其实<strong>周报的标准不是字数，而是信息量</strong>。</p>
+  <h2>一、字数建议：看岗位和领导习惯</h2>
+  <ul><li><strong>一般岗位：300-600 字</strong>足够，把成果、问题、计划讲清楚</li><li><strong>项目复杂/管理岗：600-1000 字</strong>，但要用小标题和列表分层，方便扫读</li><li><strong>数据型岗位：</strong>文字可短，但要配关键数字和环比</li></ul>
+  <p>最稳妥的办法是观察：领导/团队里评价好的周报大概多长，对齐那个标准即可。</p>
+  <h2>二、判断长短的真正标准</h2>
+  <p>问自己三个问题：领导看完知道我做成了什么吗？知道有什么风险吗？知道我下周要干什么吗？<strong>三个问题都答到了，300 字也是好周报；答不到，3000 字也是注水。</strong></p>
+  <h2>三、要不要写加班？</h2>
+  <p>可以写，但<strong>不要卖惨、不要堆工时</strong>。"本周连续加班、非常辛苦"这类表述容易引起反感。正确写法是把加班对应到结果和节点：</p>
+  <blockquote>"为保障 XX 按期上线，本周投入额外时间完成 XX，确保关键节点不延期。"</blockquote>
+  <p>这样既让领导看到你的付出，又聚焦在价值上。如果是长期、不合理的加班，更适合在一对一沟通中谈，而不是写进周报。</p>
+  <h2>四、这些"凑字数"的内容删掉</h2>
+  <ul><li>重复性的过程描述（开了几个会、回了多少消息）</li><li>正确的套话和表态（"高度重视、积极推进"）</li><li>与本周成果无关的背景铺垫</li></ul>
+  <p>追求"信息密度"而不是"字数"，是周报成熟的标志。用<a href="#/tool" data-nav>周报助手</a>生成的初稿天然结构紧凑，再按需要补充细节即可。</p>
+`
+},
+{
+  slug:"jidu-zongjie-zenme-xie",
+  title:"季度工作总结怎么写？用于汇报和述职的完整结构",
+  cat:"进阶提升",
+  date:"2026-09-28",
+  desc:"季度总结常用于汇报、述职和绩效评估，分量重于周报月报。本文给出“目标回顾—关键成果—数据亮点—问题复盘—下季规划”的完整结构和述职场景建议。",
+  content:`
+  <h1>季度工作总结怎么写？用于汇报和述职的完整结构</h1>
+  <p class="meta">分类：进阶提升 · 更新于 2026-09-28</p>
+  <p>季度工作总结往往直接关系到<strong>绩效评估、晋升述职和资源分配</strong>，是职场写作里分量最重的一类。它和月报最大的不同是：要站在"一个季度"的跨度上，清晰呈现你的目标达成、核心贡献和成长。下面是一套稳妥的完整结构。</p>
+  <h2>第一步：目标回顾（对齐季度初的承诺）</h2>
+  <p>开头先列出本季度承接的核心目标/KPI，以及整体完成情况（完成率）。让评估者一开始就有"达成度"的整体判断。</p>
+  <h2>第二步：关键成果（数据 + 亮点事件）</h2>
+  <p>挑 3-5 项最能代表你价值的成果，每项按"背景—动作—结果数据"写。优先放<strong>可量化的结果</strong>（增长、降本、提效、上线、签约），再放 1 个体现你判断力或领导力的亮点事件。</p>
+  <h2>第三步：问题与复盘（真诚但有建设性）</h2>
+  <p>没有一份季度总结是完美的。写 1-2 个未达预期或踩过的坑，重点放在"原因分析和已采取的改进"，而不是自我检讨。这反而显得你成熟、可担更大责任。</p>
+  <h2>第四步：下季度规划（目标 + 打法）</h2>
+  <p>提出下季度的核心目标和关键打法，最好能和团队/公司目标对齐，体现你的全局观。</p>
+  <h2>述职场景的额外建议</h2>
+  <ul><li>口头述职控制在规定时间内，每页一个核心信息，数据先行</li><li>多讲"我推动了什么改变"，少讲"我参与了什么"</li><li>准备好被追问细节，关键数字要能解释清楚</li></ul>
+  <h2>季度总结模板</h2>
+  <blockquote><strong>一、目标完成情况：</strong>本季度X个核心目标，完成X个，整体完成率X%。<br><strong>二、关键成果：</strong>1. XX（背景/动作/数据结果）；2. XX；3. XX。<br><strong>三、亮点：</strong>主导XX，带来XX改变/收益。<br><strong>四、问题与改进：</strong>XX未达预期，原因XX，已通过XX改进。<br><strong>五、下季规划：</strong>目标XX；关键打法1/2/3；需资源XX。</blockquote>
+  <p>季度总结平时就要积累素材——每周的周报就是最好的素材库。坚持用<a href="#/tool" data-nav>周报助手</a>记录，季度末汇总时会轻松很多。</p>
+`
+},
+{
+  slug:"zhoubao-buxie-houguo",
+  title:"周报到底写给谁看？不写周报的隐性代价",
+  cat:"进阶提升",
+  date:"2026-09-29",
+  desc:"把周报当成额外负担的人，往往低估了它的长期价值。本文讲清周报的三个读者（领导、组织、未来的自己），以及敷衍或不写周报的隐性代价，帮你建立正确心态。",
+  content:`
+  <h1>周报到底写给谁看？不写周报的隐性代价</h1>
+  <p class="meta">分类：进阶提升 · 更新于 2026-09-29</p>
+  <p>很多人把周报看成"给领导交差的形式主义"，能拖就拖、能糊就糊。但如果你理解了周报真正的读者，就会发现它是职场里<strong>性价比最高的自我投资</strong>之一。</p>
+  <h2>周报的三个读者</h2>
+  <p><strong>读者一：你的直属领导。</strong>领导需要通过周报判断进度、风险和资源分配，更在悄悄评估"谁靠谱、谁有思考"。一份清晰的周报，是你每周稳定积累信任的机会。</p>
+  <p><strong>读者二：更大的组织。</strong>周报会被汇总、转发、存档。绩效评估、晋升评审、跨部门协作时，这些记录就是你贡献的证据。</p>
+  <p><strong>读者三：未来的你自己。</strong>月报、季度总结、年终述职、面试跳槽时，"我这一年到底做成了什么"全靠这些记录。没有周报，很多成果会被时间稀释成"好像做过"。</p>
+  <h2>不写或敷衍周报的隐性代价</h2>
+  <ul><li><strong>贡献不可见：</strong>你做了十分，领导只看到六分；而会汇报的人做六分显得像十分</li><li><strong>信任慢慢流失：</strong>频繁拖延、敷衍，会被贴上"不够职业、需要盯"的标签</li><li><strong>风险被动：</strong>问题没有提前暴露，一旦爆发就是"你怎么早不说"</li><li><strong>复盘缺位：</strong>失去了每周一次系统性梳理和成长的机会</li></ul>
+  <h2>换个心态：把周报当"个人资产"在经营</h2>
+  <p>不要想"我在帮公司写周报"，而要想"我在为自己积累一份成果档案"。每周花 15-20 分钟，记录成果、数据、思考和下一步，一年后你会拥有一份完整、可追溯的成长记录，这是任何东西都换不来的。</p>
+  <p>为了让这件事可持续，关键是<strong>把成本降到最低</strong>——用<a href="#/tool" data-nav>周报助手</a>这类工具，几分钟生成规范初稿，你只需要补充思考，而不是每次对着空白文档发呆。</p>
+`
 }
 ];
 
@@ -863,8 +1080,8 @@ const ARTICLES = [
 function renderHomeArticles(){
   const grid = document.getElementById("home-articles");
   if(!grid) return;
-  grid.innerHTML = ARTICLES.slice(0,4).map(a=>`
-    <a class="article-card" href="#/article/${a.slug}" data-nav>
+  grid.innerHTML = ARTICLES.slice(0,6).map(a=>`
+    <a class="article-card" href="${a.slug}.html">
       <span class="cat">${a.cat}</span>
       <h3>${a.title}</h3>
       <p>${a.desc}</p>
@@ -904,7 +1121,7 @@ document.querySelectorAll("[data-nav]").forEach(a=>a.addEventListener("click",()
 function renderArticleList(){
   const list = document.getElementById("article-list");
   list.innerHTML = ARTICLES.map(a=>`
-    <a class="article-list-item" href="#/article/${a.slug}" data-nav>
+    <a class="article-list-item" href="${a.slug}.html">
       <span class="cat">${a.cat}</span>
       <h2>${a.title}</h2>
       <p>${a.desc}</p>
@@ -925,9 +1142,11 @@ function renderArticle(slug){
   }
   box.innerHTML = art.content;
   document.title = art.title + " - 周报助手";
-  const others = ARTICLES.filter(a=>a.slug!==slug).slice(0,2);
+  const same = ARTICLES.filter(a=>a.slug!==slug && a.cat===art.cat);
+  const rest = ARTICLES.filter(a=>a.slug!==slug && a.cat!==art.cat);
+  const others = same.concat(rest).slice(0,2);
   rel.innerHTML = others.map(a=>`
-    <a class="article-card" href="#/article/${a.slug}" data-nav>
+    <a class="article-card" href="${a.slug}.html">
       <span class="cat">${a.cat}</span>
       <h3>${a.title}</h3>
       <p>${a.desc}</p>
@@ -1062,10 +1281,11 @@ function buildReport(){
       let line = "";
       const t = d.task||"";
       const r = d.result;
+      const withVerb=(v,txt)=>txt.startsWith(v)?txt:(v+txt);
       if(i===0 && t){
-        line = `<strong>${verbs.lead}${t}</strong>`;
+        line = `<strong>${withVerb(verbs.lead,t)}</strong>`;
       }else if(t){
-        line = `<strong>${verbs.normal}${t}</strong>`;
+        line = `<strong>${withVerb(verbs.normal,t)}</strong>`;
       }
       if(r){
         line += r.startsWith("，")||r.startsWith(",") ? `${fmtResult(r)}` : `，${fmtResult(r)}`;
@@ -1106,6 +1326,14 @@ function buildReport(){
 }
 
 document.getElementById("btn-generate").addEventListener("click",buildReport);
+document.getElementById("btn-clear").addEventListener("click",()=>{
+  document.querySelectorAll("#view-tool input[type=text],#view-tool textarea").forEach(i=>i.value="");
+  ["done-list","issue-list","plan-list"].forEach(id=>{document.getElementById(id).innerHTML="";});
+  addRow("done-list","done");addRow("done-list","done");addRow("done-list","done");
+  document.getElementById("report-wrap").style.display="none";
+  document.getElementById("report-empty").style.display="block";
+  showToast("已清空，可重新填写");
+});
 document.getElementById("f-overview").addEventListener("keydown",e=>{if(e.key==="Enter")buildReport();});
 
 /* ===== 复制与导出 ===== */
@@ -1185,6 +1413,9 @@ document.getElementById("btn-txt").addEventListener("click",()=>{
   const md = buildMarkdown().replace(/^#+\s/gm,"").replace(/^- /gm,"").replace(/^\*\*/gm,"").replace(/\*\*$/gm,"");
   navigator.clipboard ? navigator.clipboard.writeText(md).then(()=>showToast("纯文本已复制")).catch(()=>{fallbackCopy(md);}) : fallbackCopy(md);
 });
+document.getElementById("btn-print").addEventListener("click",()=>{
+  window.print();
+});
 function fallbackCopy(text){
   const ta = document.createElement("textarea");
   ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
@@ -1197,5 +1428,6 @@ function fallbackCopy(text){
 renderHomeArticles();
 router();
 </script>
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 </body>
 </html>
