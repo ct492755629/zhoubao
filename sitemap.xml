@@ -6,7 +6,9 @@
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  <url><loc>https://www.zhoubaozhu.cloud/zhoubao-zenme-xie-kuangjia.html</loc><lastmod>2026-09-20</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.zhoubaozhu.cloud/about.html</loc><lastmod>2026-09-30</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.zhoubaozhu.cloud/contact.html</loc><lastmod>2026-09-30</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://www.zhoubaozhu.cloud/privacy.html</loc><lastmod>2026-09-30</lastmod><changefreq>yearly</changefreq><priority>0.4</priority></url>
   <url><loc>https://www.zhoubaozhu.cloud/pm-zhoubao-zenme-xie.html</loc><lastmod>2026-09-18</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.zhoubaozhu.cloud/chengxuyuan-zhoubao-zenme-xie.html</loc><lastmod>2026-09-16</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.zhoubaozhu.cloud/yunying-zhoubao-zenme-xie.html</loc><lastmod>2026-09-14</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
