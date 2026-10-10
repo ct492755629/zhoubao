@@ -577,6 +577,7 @@ textarea{resize:vertical;min-height:90px;}
         <div class="output-actions">
           <button class="btn-sm primary" id="btn-copy" type="button">复制为富文本</button>
           <button class="btn-sm" id="btn-md" type="button">导出 Markdown</button>
+          <button class="btn-sm" id="btn-word" type="button">导出 Word</button>
           <button class="btn-sm" id="btn-txt" type="button">复制纯文本</button>
           <button class="btn-sm" id="btn-print" type="button">打印 / 另存 PDF</button>
           <button class="btn-sm" id="btn-pro" type="button" style="background:#f4f3ee;color:#9a9488;border:1px dashed #cfc9bd;">更多岗位模板 · Pro</button>
@@ -2804,6 +2805,20 @@ document.getElementById("btn-copy").addEventListener("click",copyRich);
 document.getElementById("btn-md").addEventListener("click",()=>{
   downloadFile("周报_"+new Date().toISOString().slice(0,10)+".md",buildMarkdown(),"text/markdown;charset=utf-8");
   showToast("Markdown 已导出");
+});
+document.getElementById("btn-word").addEventListener("click",()=>{
+  const md = buildMarkdown();
+  // 将 Markdown 简单转换为 HTML，然后包装成 Word 可识别的 .doc
+  let html = md
+    .replace(/^# (.*)$/gm,"<h1>$1</h1>")
+    .replace(/^## (.*)$/gm,"<h2>$1</h2>")
+    .replace(/^### (.*)$/gm,"<h3>$1</h3>")
+    .replace(/^\*\*(.*?)\*\*/gm,"<strong>$1</strong>")
+    .replace(/^- (.*)$/gm,"<li>$1</li>")
+    .replace(/\n/g,"<br/>");
+  const docHtml = `<!DOCTYPE html><html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>周报</title></head><body style='font-family:微软雅黑,宋体;font-size:14px;line-height:1.6;'>${html}</body></html>`;
+  downloadFile("周报_"+new Date().toISOString().slice(0,10)+".doc",docHtml,"application/msword;charset=utf-8");
+  showToast("Word 已导出");
 });
 document.getElementById("btn-txt").addEventListener("click",()=>{
   const md = buildMarkdown().replace(/^#+\s/gm,"").replace(/^- /gm,"").replace(/^\*\*/gm,"").replace(/\*\*$/gm,"");
