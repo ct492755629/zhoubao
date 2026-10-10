@@ -401,6 +401,51 @@ padding:14px 36px;border-radius:10px;}
 <div class="bc"><a href="index.html">首页</a> / 联系我们</div>
 
 <p class="lead">感谢你的反馈与关注，以下方式可以找到我们。</p>
+<h2>快速反馈表单</h2>
+<form class="feedback-form" onsubmit="return sendFeedback(event)">
+  <div class="form-row">
+    <label for="fb-name">你的称呼（可选）</label>
+    <input type="text" id="fb-name" placeholder="怎么称呼你" maxlength="20">
+  </div>
+  <div class="form-row">
+    <label for="fb-type">反馈类型</label>
+    <select id="fb-type">
+      <option value="功能建议">功能建议</option>
+      <option value="Bug 反馈">Bug 反馈</option>
+      <option value="模板需求">模板需求</option>
+      <option value="Pro/团队版咨询">Pro/团队版咨询</option>
+      <option value="其他">其他</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="fb-msg">内容</label>
+    <textarea id="fb-msg" rows="5" required placeholder="请描述你的想法、问题或需求…"></textarea>
+  </div>
+  <button type="submit" class="btn-primary">提交反馈（打开邮件）</button>
+  <p class="form-tip">点击后会自动打开你的邮件客户端，主题已填好，直接发送即可。</p>
+</form>
+<style>
+.feedback-form{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin:16px 0 28px;box-shadow:var(--shadow);}
+.form-row{margin-bottom:16px;}
+.form-row label{display:block;font-weight:600;font-size:14px;margin-bottom:6px;color:var(--ink-2);}
+.form-row input,.form-row select,.form-row textarea{width:100%;padding:10px 12px;border:1px solid var(--line-strong);border-radius:8px;font-family:var(--font);font-size:14px;background:#fff;color:var(--ink);}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{outline:none;border-color:var(--accent);}
+.form-tip{font-size:12px;color:var(--ink-3);margin-top:10px;}
+</style>
+<script>
+function sendFeedback(e){
+  e.preventDefault();
+  const name=document.getElementById("fb-name").value.trim();
+  const type=document.getElementById("fb-type").value;
+  const msg=document.getElementById("fb-msg").value.trim();
+  if(!msg){alert("请填写反馈内容");return false;}
+  const subject="[周报助手] "+type+(name?" - "+name:"");
+  const body="反馈类型："+type+"\n称呼："+(name||"匿名")+"\n\n"+msg;
+  window.location.href="mailto:409798467@qq.com?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
+  return false;
+}
+</script>
+
 <h2>电子邮件</h2>
 <a class="mailbox" href="mailto:409798467@qq.com">409798467@qq.com</a>
 <p>建议在邮件标题中注明"周报助手"，以便更快处理。</p>
@@ -430,7 +475,7 @@ padding:14px 36px;border-radius:10px;}
 </div>
 <div class="footer-copy">© 2026 周报助手 · 数据本地处理，不上传</div>
 </div>
-<div class="footer-ad-note busuanzi_container_site_pv" style="display:none;">本站总访问量 <span class="busuanzi_value_site_pv"></span> 次 · 访客数 <span class="busuanzi_value_site_uv"></span> 人</div>
+<div class="footer-ad-note busuanzi_container_site_pv" style="color:#9aa3ad;font-size:12px;text-align:center;margin-top:12px;">本站总访问量 <span class="busuanzi_value_site_pv"></span> 次 · 访客数 <span class="busuanzi_value_site_uv"></span> 人</div>
 </div></footer>
 <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 </body></html>
